@@ -1,0 +1,292 @@
+[
+  {
+    "id": "0",
+    "title": "Detecteur",
+    "description": "Amelioration des capteurs",
+    "posX": 100,
+    "posY": 94,
+    "iconPosX":115,
+    "iconPosY":0,
+    "icon": "icon0.png",
+    "width": 30,
+    "height": 25,
+    "level":[{
+      "cost":{"value":200,"currency":4},
+      "generation":{"value":0,"currency":0},
+      "sprite": ""
+      },{
+      "cost":{"value":100,"currency":1},
+      "generation":{"value":50,"currency":4},
+      "sprite": "module0.png"
+    },{
+      "cost":{"value":300,"currency":1},
+      "generation":{"value":10,"currency":4},
+      "sprite": "module0.png"
+      },{
+      "cost": {"value": 500, "currency":1 },
+      "generation": {"value": 100,"currency": 4},
+      "sprite": "module0.png"
+      },{
+      "cost":{"value":10,"currency":2},
+      "generation":{"value":1,"currency":1},
+      "sprite": "module0.png"
+    },{
+      "cost":{"value":10,"currency":2},
+      "generation":{"value":1,"currency":1},
+      "sprite": "module0.png"
+    },{
+      "cost":{"value":10,"currency":2},
+      "generation":{"value":1,"currency":1},
+      "sprite": "module0.png"
+      },{
+        "cost":{"value":10,"currency":2},
+        "generation":{"value":1,"currency":1},
+        "sprite": "module0.png"
+      },{
+        "cost":{"value":10,"currency":2},
+        "generation":{"value":1,"currency":1},
+        "sprite": "module0.png"
+      },{
+        "cost":{"value":10,"currency":2},
+        "generation":{"value":1,"currency":1},
+        "sprite": "module0.png"
+    },{
+      "cost":{"value":100,"currency":1},
+      "generation":{"value":50,"currency":4},
+      "sprite": "module0.png"
+    },{
+      "cost":{"value":100,"currency":1},
+      "generation":{"value":50,"currency":4},
+      "sprite": "module0.png"
+    },{
+      "cost":{"value":100,"currency":1},
+      "generation":{"value":50,"currency":4},
+      "sprite": "module0.png"
+    },{
+      "cost":{"value":100,"currency":1},
+      "generation":{"value":50,"currency":4},
+      "sprite": "module0.png"
+    },{
+      "cost":{"value":100,"currency":1},
+      "generation":{"value":50,"currency":4},
+      "sprite": "module0.png"
+    },{
+      "cost":{"value":100,"currency":1},
+      "generation":{"value":50,"currency":4},
+      "sprite": "module0.png"
+    },{
+      "cost":{"value":100,"currency":1},
+      "generation":{"value":50,"currency":4},
+      "sprite": "module0.png"
+    },{
+      "cost":{"value":100,"currency":1},
+      "generation":{"value":50,"currency":4},
+      "sprite": "module0.png"
+    },{
+      "cost":{"value":100,"currency":1},
+      "generation":{"value":50,"currency":4},
+      "sprite": "module0.png"
+    },{
+      "cost":{"value":100,"currency":1},
+      "generation":{"value":50,"currency":4},
+      "sprite": "module0.png"
+    },{
+      "cost":{"value":100,"currency":1},
+      "generation":{"value":50,"currency":4},
+      "sprite": "module0.png"
+    },{
+      "cost":{"value":100,"currency":1},
+      "generation":{"value":50,"currency":4},
+      "sprite": "module0.png"
+    },{
+      "cost":{"value":100,"currency":1},
+      "generation":{"value":50,"currency":4},
+      "sprite": "module0.png"
+    },{
+      "cost":{"value":100,"currency":1},
+      "generation":{"value":50,"currency":4},
+      "sprite": "module0.png"
+    },{
+      "cost":{"value":100,"currency":1},
+      "generation":{"value":50,"currency":4},
+      "sprite": "module0.png"
+    },{
+      "cost":{"value":100,"currency":1},
+      "generation":{"value":50,"currency":4},
+      "sprite": "module0.png"
+    },{
+      "cost":{"value":100,"currency":1},
+      "generation":{"value":50,"currency":4},
+      "sprite": "module0.png"
+    },{
+      "cost":{"value":100,"currency":1},
+      "generation":{"value":50,"currency":4},
+      "sprite": "module0.png"
+    },{
+      "cost":{"value":100,"currency":1},
+      "generation":{"value":50,"currency":4},
+      "sprite": "module0.png"
+    },{
+      "cost":{"value":100,"currency":1},
+      "generation":{"value":50,"currency":4},
+      "sprite": "module0.png"
+    },{
+      "cost":{"value":100,"currency":1},
+      "generation":{"value":50,"currency":4},
+      "sprite": "module0.png"
+    },{
+      "cost":{"value":100,"currency":1},
+      "generation":{"value":50,"currency":4},
+      "sprite": "module0.png"
+    },{
+      "cost":{"value":100,"currency":1},
+      "generation":{"value":50,"currency":4},
+      "sprite": "module0.png"
+    },{
+      "cost":{"value":90,"currency":1},
+      "generation":{"value":50,"currency":4},
+      "sprite": "module0.png"
+    },{
+      "cost":{"value":150,"currency":1},
+      "generation":{"value":50,"currency":4},
+      "sprite": "module0.png"
+    }
+    ]
+  },
+  {
+    "id": "1",
+    "title": "Moteur",
+    "description": "Amelioration des capteurs",
+    "posX": 100,
+    "posY": 94,
+    "iconPosX":115,
+    "iconPosY":0,
+    "icon": "icon1.png",
+    "width": 30,
+    "height": 25,
+    "level":[{
+      "cost":{"value":50,"currency":1},
+      "generation":{"value":0,"currency":0},
+      "sprite": "module1.png"
+      },{
+      "cost":{"value":100,"currency":3},
+      "generation":{"value":1,"currency":1},
+      "sprite": "module1.png"
+      },{
+      "cost":{"value":100,"currency":4},
+      "generation":{"value":1,"currency":1},
+      "sprite": "module1.png"
+      },{
+      "cost": {"value": 100, "currency": 5},
+      "generation": {"value": 1,"currency": 1},
+      "sprite": "module1.png"
+      },{
+      "cost":{"value":100,"currency":0},
+      "generation":{"value":1,"currency":1},
+      "sprite": "module1.png"
+      }
+    ]
+  },
+  {
+    "id": "2",
+    "title": "Laser",
+    "description": "Amelioration des capteurs",
+    "posX": 80,
+    "posY": -15,
+    "iconPosX":115,
+    "iconPosY":0,
+    "icon": "icon2.png",
+    "width": 40,
+    "height": 20,
+    "level":[{
+      "cost":{"value":300,"currency":4},
+      "generation":{"value":0,"currency":0},
+      "sprite": "module2.png"
+      },{
+      "cost":{"value":300,"currency":1},
+      "generation":{"value":1,"currency":1},
+      "sprite": "module2.png"
+      },{
+      "cost":{"value":550,"currency":1},
+      "generation":{"value":1,"currency":1},
+      "sprite": "module2.png"
+      },{
+      "cost": {"value": 700, "currency": 2},
+      "generation": {"value": 1,"currency": 1},
+      "sprite": "module2.png"
+      },{
+      "cost":{"value":100,"currency":0},
+      "generation":{"value":1,"currency":1},
+      "sprite": "module2.png"
+      }
+    ]
+  },
+  {
+    "id": "3",
+    "title": "Stabilisateur",
+    "description": "Amelioration des sta",
+    "posX": 80,
+    "posY": -15,
+    "iconPosX":115,
+    "iconPosY":0,
+    "icon": "icon3.png",
+    "width": 40,
+    "height": 20,
+    "level":[{
+      "cost":{"value":300,"currency":4},
+      "generation":{"value":0,"currency":0},
+      "sprite": "module3.png"
+    },{
+      "cost":{"value":300,"currency":1},
+      "generation":{"value":1,"currency":1},
+      "sprite": "module3.png"
+    },{
+      "cost":{"value":550,"currency":1},
+      "generation":{"value":1,"currency":1},
+      "sprite": "module3.png"
+    },{
+      "cost": {"value": 700, "currency": 2},
+      "generation": {"value": 1,"currency": 1},
+      "sprite": "module3.png"
+    },{
+      "cost":{"value":100,"currency":0},
+      "generation":{"value":1,"currency":1},
+      "sprite": "module3.png"
+    }
+    ]
+  },
+  {
+    "id": "4",
+    "title": "Personnel",
+    "description": "Amelioration des sta",
+    "posX": 193,
+    "posY": 20,
+    "iconPosX":115,
+    "iconPosY":0,
+    "icon": "icon4.png",
+    "width": 35,
+    "height": 80,
+    "level":[{
+      "cost":{"value":300,"currency":4},
+      "generation":{"value":0,"currency":0},
+      "sprite": "module4.png"
+    },{
+      "cost":{"value":300,"currency":1},
+      "generation":{"value":1,"currency":1},
+      "sprite": "module4.png"
+    },{
+      "cost":{"value":550,"currency":1},
+      "generation":{"value":1,"currency":1},
+      "sprite": "module4.png"
+    },{
+      "cost": {"value": 700, "currency": 2},
+      "generation": {"value": 1,"currency": 1},
+      "sprite": "module4.png"
+    },{
+      "cost":{"value":100,"currency":0},
+      "generation":{"value":1,"currency":1},
+      "sprite": "module4.png"
+    }
+    ]
+  }
+]
