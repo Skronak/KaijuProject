@@ -1,5 +1,7 @@
 package com.kaiju.game.input;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.kaiju.game.manager.GameManager;
@@ -11,6 +13,7 @@ import java.util.Random;
 import static com.badlogic.gdx.math.MathUtils.random;
 
 /**
+ * Listener de touch sur un enemy
  * Created by Skronak on 24/04/2018.
  */
 
@@ -29,8 +32,8 @@ public class CustomInputListener extends InputListener {
     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
         this.gameManager.getBattleResultEntity().setTapNumber(gameManager.getBattleResultEntity().getTapNumber()+1);
         this.gameManager.getGameInformation().setTotalTapNumber(this.gameManager.getGameInformation().getTotalTapNumber()+1);
+        this.playScreen.processPointerHitAnimation(Gdx.input.getX(), Gdx.input.getY());
         this.playScreen.processHit(false);
-        playScreen.processPointerHitAnimation((int)event.getStageX(), (int)event.getStageY());
         return false;
     }
 }

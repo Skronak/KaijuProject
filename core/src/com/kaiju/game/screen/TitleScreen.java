@@ -85,7 +85,7 @@ public class TitleScreen implements Screen {
 
         gameManager.getAssetManager().getLoseMusic().stop();
         gameManager.getAssetManager().getKaijuRoar1Sound().stop();
-//        gameManager.getAssetManager().getMainMusic().play();
+        gameManager.getAssetManager().getMainMusic().play();
 
         Gdx.input.setInputProcessor(stage);
 

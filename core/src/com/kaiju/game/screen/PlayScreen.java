@@ -78,7 +78,7 @@ public class PlayScreen extends AbstractScreen {
     private Image backgroundImage;
     private Image backgroundImageHurt;
 
-    public PlayScreen(GameManager gameManager) {
+    public PlayScreen(final GameManager gameManager) {
         this.gameManager=gameManager;
         backgroundImage = new Image(gameManager.getAssetManager().getBackgroundCity());
         backgroundImage.setScale(0.7f,0.7f);
@@ -124,20 +124,22 @@ public class PlayScreen extends AbstractScreen {
 
         textAnimMinX =100;
         random = new Random();
-        enemy.addListener(new CustomInputListener(this));
+
         backgroundImage.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                Gdx.app.log("ola","ola");
-                backgroundImage.clearActions();
+                backgroundImageHurt.clearActions();
+                processPointerHitAnimation(Gdx.input.getX(), Gdx.input.getY());
                 backgroundImageHurt.addAction(Actions.sequence(Actions.show(),Actions.fadeIn(0.2f),Actions.fadeOut(0.2f),Actions.hide()));
+                gameManager.decreasePopulation();
                 return true;
             }
         });
 
+        // input Listener
+        enemy.addListener(new CustomInputListener(this));
         inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(stage);
-//        inputMultiplexer.addProcessor(new CustomInputProcessor(this));
         Gdx.input.setInputProcessor(inputMultiplexer);
     }
 
@@ -184,6 +186,10 @@ public class PlayScreen extends AbstractScreen {
         playerMecha.addAction(Actions.moveBy(-30,0,3));
     }
 
+    /**
+     * Changement d'ecran lors d'une victoire
+     * et animation de la mort de enemy
+     */
     private void win_battle() {
         animateDeath();
         Gdx.app.log("win_battle","win_battle");
@@ -192,9 +198,11 @@ public class PlayScreen extends AbstractScreen {
         gameManager.progress();
     }
 
+    /**
+     * Changement d'ecran lors d'un defaite
+     */
     private void lose_battle(){
         gameManager.switchToLoseScreen();
-
     }
     /**
      * Affiche image la ou lecran est touche
@@ -206,15 +214,14 @@ public class PlayScreen extends AbstractScreen {
         tapActor.setDeltatime(0);
         Vector3 position2World = camera.unproject(new Vector3(positionX, positionY,0));
         tapActor.setColor(Color.WHITE);
-        tapActor.setPosition(position2World.x- ((int)tapActor.getWidth()/2),( (int) position2World.y-tapActor.getHeight()/2));//TODO a calculer autrepart
+        tapActor.setPosition(position2World.x- 10-((int)tapActor.getWidth()/2),( (int) position2World.y-tapActor.getHeight()/2));//TODO a calculer autrepart
         tapActor.addAction(Actions.sequence(
                 Actions.show(),
-                Actions.fadeIn(0.5f),
+                Actions.fadeIn(0.1f),
                 Actions.fadeOut(0.2f),
                 Actions.hide()
         ));
     }
-
 
     /**
      * Declenchement d'un touch sur l'ecran
@@ -234,7 +241,14 @@ public class PlayScreen extends AbstractScreen {
             hud.decreaseHealthBar(healthPercent);
         }
     }
+
+    /**
+     * Animation d'une touche
+     * @param critical
+     */
     private void animateHit(boolean critical){
+        enemy.clearActions();
+        enemy.addAction(Actions.sequence(Actions.color(Color.LIGHT_GRAY,0.2f), Actions.color(Color.WHITE)));
         String displayValue = gameManager.getLargeMath().getDisplayValue(gameManager.getGameInformation().getGenGoldActive(), gameManager.getGameInformation().getGenCurrencyActive());
         damageLabel = new Label(displayValue, new Label.LabelStyle(gameManager.getAssetManager().getFont(), Constants.NORMAL_LABEL_COLOR));
         damageLabel.setPosition(damageLabelPositionX[gLPPointer],damageLabelPositionY[gLPPointer]);

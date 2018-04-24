@@ -6,6 +6,11 @@ import com.kaiju.game.entity.KaijuEntity;
 
 import com.kaiju.game.manager.GameManager;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.util.Locale;
+
 /**
  * Created by Skronak on 21/08/2017.
 * TODO a recharger en live
@@ -19,7 +24,9 @@ public class FightResultMenu extends AbstractMenu {
     private Label hitLabel;
     private KaijuEntity kaijuEntity;
     private Label noteLabel;
-    private Label goldLabel;
+    private Label scoreLabel;
+    private Label populationLostLabel;
+    private Label remainingPopulation;
 
     public FightResultMenu(GameManager gameManager) {
         super(gameManager);
@@ -33,11 +40,13 @@ public class FightResultMenu extends AbstractMenu {
         kaijuNameLabel = new Label("", skin);
         hitLabel = new Label("", skin);
         timerLabel = new Label("", skin);
-        goldLabel = new Label("",skin);
-        goldLabel.setFontScale(2);
-        goldLabel.setColor(gameManager.getAssetManager().getResultTextColor());
+        scoreLabel = new Label("",skin);
+        scoreLabel.setFontScale(2);
+        scoreLabel.setColor(gameManager.getAssetManager().getResultTextColor());
         noteLabel = new Label("",skin);
         noteLabel.setFontScale(2);
+        populationLostLabel = new Label("", skin);
+        remainingPopulation = new Label("", skin);
 
         parentTable.setVisible(true);
         parentTable.add(new Image(gameManager.getAssetManager().getResultMenuBar())).colspan(2).top();
@@ -54,11 +63,15 @@ public class FightResultMenu extends AbstractMenu {
         parentTable.row();
         parentTable.add(hitLabel).left().pad(5);
         parentTable.row();
-        parentTable.add(noteLabel).pad(20);
+        parentTable.add(populationLostLabel).left().pad(5);
+        parentTable.row();
+        parentTable.add(remainingPopulation).left().pad(5);
+        parentTable.row();
+        parentTable.add(noteLabel).pad(10);
         parentTable.row();
         parentTable.add(new Image(gameManager.getAssetManager().getResultMenuBar())).padTop(20).colspan(2);
         parentTable.row();
-        parentTable.add(goldLabel).right();
+        parentTable.add(scoreLabel).right();
         parentTable.row();
         parentTable.add(new Image(gameManager.getAssetManager().getResultMenuBar())).colspan(2);
     }
@@ -69,15 +82,22 @@ public class FightResultMenu extends AbstractMenu {
      * si val enum = x, alors affiche label avec couleur specifique
      */
     public void initTable() {
+        // Separateur de milliers
+        DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.US);
+        DecimalFormatSymbols symbols = formatter.getDecimalFormatSymbols();
+        symbols.setGroupingSeparator(' ');
+        formatter.setDecimalFormatSymbols(symbols);
 
         kaijuClassLabel.setText("Category: "+kaijuEntity.getCategory());
         kaijuNameLabel.setText("Name: "+kaijuEntity.getName());
         hitLabel.setText(String.valueOf("Hit number: "+gameManager.getBattleResultEntity().getTapNumber()));
+        populationLostLabel.setText("Innocent killed: "+formatter.format(gameManager.getBattleResultEntity().getPopulationLose()));
+        remainingPopulation.setText("Remaining population: "+formatter.format(gameManager.getGameInformation().getPopulation()));
         timerLabel.setText("Duration: "+ gameManager.getLargeMath().getDecimalFormat().format(kaijuEntity.getTime() - gameManager.getBattleResultEntity().getTimerLeft())+"s");
         noteLabel.setText("RANK "+gameManager.getBattleResultEntity().getRank());
-        goldLabel.setText("+ "+String.valueOf(gameManager.getBattleResultEntity().getGold()+ " Gold"));
+        scoreLabel.setText("+ "+String.valueOf(gameManager.getBattleResultEntity().getGold()+ " Gold"));
         if (gameManager.getBattleResultEntity().getMultiplier()>0) {
-            goldLabel.setText(goldLabel.getText().append(" (X"+gameManager.getBattleResultEntity().getMultiplier()+")"));
+            scoreLabel.setText(scoreLabel.getText().append(" (X"+gameManager.getBattleResultEntity().getMultiplier()+")"));
         }
 
     }

@@ -10,8 +10,6 @@ import com.kaiju.game.MyGdxGame;
 import com.kaiju.game.entity.BattleResultEntity;
 import com.kaiju.game.entity.GameInformation;
 import com.kaiju.game.entity.KaijuEntity;
-import com.kaiju.game.screen.AbstractScreen;
-import com.kaiju.game.screen.CustomiseScreen;
 import com.kaiju.game.screen.EndGameScreen;
 import com.kaiju.game.screen.LostScreen;
 import com.kaiju.game.screen.PlayScreen;
@@ -32,8 +30,6 @@ public class GameManager {
 
     private AssetManager assetManager;
 
-    private ModuleManager moduleManager;
-
     private PlayScreen playScreen;
 
     private ResultScreen resultScreen;
@@ -41,8 +37,6 @@ public class GameManager {
     private LostScreen lostScreen;
 
     private TitleScreen titleScreen;
-
-    private CustomiseScreen customiseScreen;
 
     private EndGameScreen endGameScreen;
 
@@ -64,8 +58,6 @@ public class GameManager {
         playScreen = new PlayScreen(this);
         resultScreen = new ResultScreen(this);
         titleScreen = new TitleScreen(this);
-        customiseScreen = new CustomiseScreen(this);
-        moduleManager = new ModuleManager(this);
         lostScreen = new LostScreen(this);
         endGameScreen = new EndGameScreen(this);
     }
@@ -82,9 +74,9 @@ public class GameManager {
         KaijuEntity kaijuEntity = assetManager.getKaijuEntityList().get(gameInformation.getCurrentState());
         if (kaijuEntity.getId().equals("4")) {
             assetManager.getMainMusic().pause();
-//            assetManager.getEasterMusic().play();
+            assetManager.getEasterMusic().play();
         } else {
-//            assetManager.getMainMusic().play();
+            assetManager.getMainMusic().play();
             assetManager.getEasterMusic().stop();
         }
 
@@ -153,6 +145,15 @@ public class GameManager {
         resultScreen.getStage().getRoot().addAction(sequenceAction);
     }
 
+    public void decreasePopulation() {
+        int value = gameInformation.getCurrentState() * 5200;
+        battleResultEntity.setPopulationLose(value);//sauvegarde la valeur pour l'afficher
+        if (value < gameInformation.getPopulation()){
+            gameInformation.setPopulation(gameInformation.getPopulation()-value);
+        } else {
+            switchToLoseScreen();
+        }
+    }
     /**
      * Affiche le tableau de resultat
      */
@@ -208,24 +209,6 @@ public class GameManager {
     /**
      * Affiche le tableau de resultat
      */
-    public void switchToCustomiseScreen() {
-
-        Gdx.app.log("switchToPlayScreen","switchToPlayScreen");
-        resultScreen.getStage().getRoot().getColor().a = 1;
-        SequenceAction sequenceAction = new SequenceAction();
-        sequenceAction.addAction(Actions.fadeOut(1f));
-        sequenceAction.addAction(Actions.run(new Runnable() {
-            @Override
-            public void run() {
-                game.setScreen(customiseScreen);
-            }
-        }));
-        resultScreen.getStage().getRoot().addAction(sequenceAction);
-    }
-
-    /**
-     * Affiche le tableau de resultat
-     */
     public void switchToTitleScreen() {
         Gdx.app.log("switchToTitleScreen","switchToTitleScreen");
         lostScreen.getStage().getRoot().getColor().a = 1;
@@ -251,6 +234,7 @@ public class GameManager {
         gameInformation.setTotalTapNumber(0);
         gameInformation.setTotalGameTime(0l);
         gameInformation.setFirstPlay(true);
+        gameInformation.setPopulation(1000000);
     }
     /**
      * Affiche le tableau de resultat
@@ -273,19 +257,19 @@ public class GameManager {
     public void initResultEntity() {
         float durationPercent = (battleResultEntity.getTimerLeft()/resultScreen.getCurrentKaijuEntity().getTime());
         float goldValue=0f;
-        if (durationPercent > 0.9f) {
+        if (durationPercent > 0.9f && battleResultEntity.getPopulationLose()==0) {
             battleResultEntity.setRank("SS");
             battleResultEntity.setMultiplier(3);
-        } else if (durationPercent > 0.8f) {
+        } else if (durationPercent > 0.8f && battleResultEntity.getPopulationLose() < 10000) {
             battleResultEntity.setRank("S");
             battleResultEntity.setMultiplier(2.5f);
-        } else if (durationPercent > 0.7f) {
+        } else if (durationPercent > 0.7f &&battleResultEntity.getPopulationLose() < 20000) {
             battleResultEntity.setRank("AAA");
             battleResultEntity.setMultiplier(2);
-        } else if (durationPercent > 0.6f) {
+        } else if (durationPercent > 0.6f && battleResultEntity.getPopulationLose() < 50000) {
             battleResultEntity.setRank("AA");
             battleResultEntity.setMultiplier(1.75f);
-        } else if (durationPercent > 0.5f) {
+        } else if (durationPercent > 0.5f && battleResultEntity.getPopulationLose() < 1000000) {
             battleResultEntity.setRank("A");
             battleResultEntity.setMultiplier(1.5f);
         } else if (durationPercent > 0.5f) {
@@ -375,22 +359,6 @@ public class GameManager {
 
     public void setBattleResultEntity(BattleResultEntity battleResultEntity) {
         this.battleResultEntity = battleResultEntity;
-    }
-
-    public CustomiseScreen getCustomiseScreen() {
-        return customiseScreen;
-    }
-
-    public void setCustomiseScreen(CustomiseScreen customiseScreen) {
-        this.customiseScreen = customiseScreen;
-    }
-
-    public ModuleManager getModuleManager() {
-        return moduleManager;
-    }
-
-    public void setModuleManager(ModuleManager moduleManager) {
-        this.moduleManager = moduleManager;
     }
 
     public LostScreen getLostScreen() {

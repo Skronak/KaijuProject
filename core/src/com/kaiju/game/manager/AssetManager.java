@@ -13,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Json;
 import com.kaiju.game.entity.KaijuEntity;
-import com.kaiju.game.entity.ModuleElementDTO;
 import com.kaiju.game.utils.BitmapFontGenerator;
 import com.kaiju.game.utils.Constants;
 
@@ -37,21 +36,17 @@ public class AssetManager {
     private Image healthBarEmpty;
     private Image loseBackground;
     private Texture resultMenuBar;
-    private Texture resultMenuWarningBar;
-    private Image warningImage;
     private Image endGameImage;
     private Texture backgroundCity;
     private Texture backgroundCityHurt;
     private Color resultTextColor;
     private ArrayList<KaijuEntity> kaijuEntityList;
-    private ArrayList<ModuleElementDTO> moduleElementList;
     private Music mainMusic;
     private Sound kaijuRoar1Sound;
     private Music easterMusic;
     private Image mainBackground;
     private Music loseMusic;
     private int loadValue;
-    private TextButton.TextButtonStyle moduleMenuBuyTxtBtnStyle;
 
     public AssetManager() {
         this.json = new Json();
@@ -69,16 +64,12 @@ public class AssetManager {
         kaijuEntityList = new ArrayList<KaijuEntity>();
         kaijuEntityList = json.fromJson(ArrayList.class, KaijuEntity.class, Gdx.files.internal("json/kaijuJSON.json"));
 
-        moduleElementList = new ArrayList<ModuleElementDTO>();
-        moduleElementList = json.fromJson(ArrayList.class, ModuleElementDTO.class, Gdx.files.internal("json/moduleElement.json"));
-
         BitmapFontGenerator generator = new BitmapFontGenerator();
         skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
         font = generator.getFont();
         generator.dispose();
         mainBackground = new Image(new Texture(files.internal("image/mg.png")));
         resultMenuBar = new Texture(files.internal("ui/separator.png"));
-        resultMenuWarningBar = new Texture(files.internal("ui/separator2.png"));
         backgroundCity = new Texture(files.internal("image/city.png"));
         backgroundCityHurt = new Texture(files.internal("image/cityHurt.png"));
         menuBackgroundTexture = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("ui/backgroundMenu.png"))));
@@ -94,11 +85,6 @@ public class AssetManager {
         textButtonStyle.fontColor = Color.WHITE;
         textButtonStyle.downFontColor = Color.GRAY;
         resultTextColor = new Color(Constants.RESULT_LABEL_COLOR[0],Constants.RESULT_LABEL_COLOR[1],Constants.RESULT_LABEL_COLOR[2],1f);
-
-        TextureRegionDrawable buyDrawableUp = new TextureRegionDrawable( new TextureRegion(new Texture(Gdx.files.internal("sprites/goldButtonUp.png"))) );
-        TextureRegionDrawable buyDrawableDown = new TextureRegionDrawable( new TextureRegion(new Texture(Gdx.files.internal("sprites/goldButtonDown.png"))) );
-        TextureRegionDrawable buyDrawableChecked = new TextureRegionDrawable( new TextureRegion(new Texture(Gdx.files.internal("sprites/goldButtonUp.png"))) );
-        moduleMenuBuyTxtBtnStyle = new TextButton.TextButtonStyle(buyDrawableUp, buyDrawableDown,buyDrawableChecked, font);
 
         mainMusic = Gdx.audio.newMusic(Gdx.files.internal("audio/main.mp3"));
         loseMusic = Gdx.audio.newMusic(Gdx.files.internal("audio/lose.mp3"));
@@ -181,24 +167,8 @@ public class AssetManager {
         return resultTextColor;
     }
 
-    public Image getWarningImage() {
-        return warningImage;
-    }
-
-    public ArrayList<ModuleElementDTO> getModuleElementList() {
-        return moduleElementList;
-    }
-
-    public TextButton.TextButtonStyle getModuleMenuBuyTxtBtnStyle() {
-        return moduleMenuBuyTxtBtnStyle;
-    }
-
     public Image getLoseBackground() {
         return loseBackground;
-    }
-
-    public void setLoseBackground(Image loseBackground) {
-        this.loseBackground = loseBackground;
     }
 
     public Sound getKaijuRoar1Sound() {

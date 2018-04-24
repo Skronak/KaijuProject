@@ -77,8 +77,6 @@ public class CombatHud implements Disposable {
      */
     private void initMenu() {
         resultMenu = new FightResultMenu(gameManager);
-//        stage.addActor(resultMenu.getParentTable());
-//        resultMenu.getParentTable().setVisible(true);
     }
     /**
      * Initialisation des bouton du hud

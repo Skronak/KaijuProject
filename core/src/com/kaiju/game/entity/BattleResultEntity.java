@@ -13,6 +13,15 @@ public class BattleResultEntity {
     private String gold;
     private String repair;
     private float multiplier;
+    private int populationLose;
+
+    public int getPopulationLose() {
+        return populationLose;
+    }
+
+    public void setPopulationLose(int populationLose) {
+        this.populationLose = populationLose;
+    }
 
     public float getMultiplier() {
         return multiplier;

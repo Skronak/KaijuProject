@@ -13,6 +13,7 @@ import com.kaiju.game.manager.GameManager;
 /**
  * Created by Skronak on 29/01/2017.
  * Listener des input sur le Playscreen
+ * Affiche le pointeur dans tous les cas
  */
 public class CustomInputProcessor implements InputProcessor {
 
@@ -46,14 +47,8 @@ public class CustomInputProcessor implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        int randCritical = random.nextInt(Constants.CRITICAL_CHANCE) + 1;
         this.gameManager.getBattleResultEntity().setTapNumber(gameManager.getBattleResultEntity().getTapNumber()+1);
         this.gameManager.getGameInformation().setTotalTapNumber(this.gameManager.getGameInformation().getTotalTapNumber()+1);
-        if (randCritical == 1) {
-            this.playScreen.processHit(true);
-        } else {
-            this.playScreen.processHit(false);
-        }
         playScreen.processPointerHitAnimation(screenX, screenY);
         return false;
     }
