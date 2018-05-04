@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
@@ -23,10 +24,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.kaiju.game.action.ChangeStateAction;
+import com.kaiju.game.actor.AnimatedBaseActor;
 import com.kaiju.game.entity.AnimatedActor;
 import com.kaiju.game.entity.CombatHud;
 import com.kaiju.game.input.CustomInputListener;
@@ -48,8 +51,6 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn;
 public class PlayScreen extends AbstractScreen {
 
     private Stage stage;
-    private TextButton startButton;
-    private TextButton exitButton;
     private Skin skin;
     private OrthographicCamera camera;
     private Viewport viewport;
@@ -57,7 +58,7 @@ public class PlayScreen extends AbstractScreen {
     private float autoSaveTimer;
     private SpriteBatch spriteBatch;
     private AnimatedActor enemy;
-    private AnimatedActor playerMecha;
+    private AnimatedBaseActor playerMecha;
     private int healthMax;
     private int healthCurrent;
     private int textAnimMinX;
@@ -65,6 +66,7 @@ public class PlayScreen extends AbstractScreen {
     private int[] damageLabelPositionY = {300,320,350,290,340,300};
     private int[] damageLabelPositionX = {150,100,200,180,120,220};
     int gLPPointer;
+    private Label causaltyLabel;
 
     private CombatHud hud;
     private GameManager gameManager;
@@ -80,13 +82,18 @@ public class PlayScreen extends AbstractScreen {
 
     public PlayScreen(final GameManager gameManager) {
         this.gameManager=gameManager;
-        backgroundImage = new Image(gameManager.getAssetManager().getBackgroundCity());
+        backgroundImage = new Image(gameManager.getAssetManager().getRandBackgroundTexture());
         backgroundImage.setScale(0.7f,0.7f);
         backgroundImage.setPosition(-150,0);
         backgroundImageHurt = new Image(gameManager.getAssetManager().getBackgroundCityHurt());
         backgroundImageHurt.setScale(backgroundImage.getScaleX(), backgroundImage.getScaleY());
         backgroundImageHurt.setPosition(backgroundImage.getX(), backgroundImage.getY());
         backgroundImageHurt.setVisible(false);
+
+        BitmapFont font = gameManager.getAssetManager().getFont();
+        causaltyLabel = new Label("",new Label.LabelStyle(gameManager.getAssetManager().getFont(), Color.WHITE));
+        causaltyLabel.setFontScale(0.5f);
+        causaltyLabel.setVisible(false);
 
         healthMax=200;
         spriteBatch = new SpriteBatch();
@@ -102,14 +109,23 @@ public class PlayScreen extends AbstractScreen {
 
         Array<TextureRegion> framesMech = new Array<TextureRegion>();
         framesMech.add(new TextureRegion(new Texture(Gdx.files.internal("sprites/mecha1.png"))));
-        playerMecha = new AnimatedActor(100,0,250,300,1,framesMech,framesMech, Animation.PlayMode.NORMAL);
+        framesMech.add(new TextureRegion(new Texture(Gdx.files.internal("sprites/mecha2.png"))));
+        framesMech.add(new TextureRegion(new Texture(Gdx.files.internal("sprites/mecha3.png"))));
+        framesMech.add(new TextureRegion(new Texture(Gdx.files.internal("sprites/mecha4.png"))));
+        framesMech.add(new TextureRegion(new Texture(Gdx.files.internal("sprites/mecha5.png"))));
+        playerMecha = new AnimatedBaseActor();
+        Animation mechaIdleAnimation = new Animation(0.2f,gameManager.getAssetManager().getMechaFramesIdle(), Animation.PlayMode.NORMAL);
+        Animation mechaCritAnimation = new Animation(0.1f,gameManager.getAssetManager().getMechaFramesCrit(), Animation.PlayMode.LOOP_PINGPONG);
+        playerMecha.setPosition(170,-10);
+        playerMecha.setSize(280,430);
+//        playerMecha.setPosition(430,25);
+//        playerMecha.setSize(120,120);
+        playerMecha.storeAnimation("idle", mechaIdleAnimation);
+        playerMecha.storeAnimation("crit", mechaCritAnimation);
+        playerMecha.setActiveAnimation("idle");
 
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage.getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
-
-        TextButton textButton = new TextButton("START", gameManager.getAssetManager().getTextButtonStyle());
-        textButton.setSize(200,200);
-        textButton.setPosition((Constants.V_WIDTH/2)-textButton.getWidth()/2, Constants.V_HEIGHT/5);
 
         Array<TextureRegion> frames = new Array<TextureRegion>();
         frames.add(new TextureRegion(new Texture(files.internal("sprites/tap/tap1.png"))));
@@ -128,10 +144,13 @@ public class PlayScreen extends AbstractScreen {
         backgroundImage.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                backgroundImageHurt.clearActions();
+                int value = gameManager.decreasePopulation();
+                hud.decreasePopulation();
+                causaltyLabel.setText("- "+String.valueOf(value)+" People");
+
                 processPointerHitAnimation(Gdx.input.getX(), Gdx.input.getY());
-                backgroundImageHurt.addAction(Actions.sequence(Actions.show(),Actions.fadeIn(0.2f),Actions.fadeOut(0.2f),Actions.hide()));
-                gameManager.decreasePopulation();
+                processWrongTargetAnimation(Gdx.input.getX(), Gdx.input.getY());
+
                 return true;
             }
         });
@@ -156,6 +175,7 @@ public class PlayScreen extends AbstractScreen {
         layer0GraphicObject.addActor(backgroundImageHurt);
         layer1GraphicObject.addActor(enemy);
         layer1GraphicObject.addActor(tapActor);
+        layer1GraphicObject.addActor(causaltyLabel);
         layer2GraphicObject.addActor(playerMecha);
 
         // Gestion des calques
@@ -171,6 +191,7 @@ public class PlayScreen extends AbstractScreen {
      * un combat
      */
     private void startBattle() {
+        Gdx.app.debug("PlayScreen", "StartBattle");
         gameManager.setCurrentState(GameState.WAIT);
         gameManager.initialiseBattle();
         healthCurrent=healthMax;
@@ -178,6 +199,7 @@ public class PlayScreen extends AbstractScreen {
         // Animation debut de combat
         // Desactive l'input pendant 4secondes
         enemy.addAction(Actions.sequence(new ChangeStateAction(gameManager, GameState.WAIT),Actions.delay(3f),new ChangeStateAction(gameManager, GameState.BATTLE)));
+        backgroundImage.setDrawable(new TextureRegionDrawable(new TextureRegion(gameManager.getAssetManager().getRandBackgroundTexture())));
         backgroundImage.setPosition(backgroundImage.getX()-60, backgroundImage.getY());
         backgroundImage.addAction(Actions.moveBy(60,0,3));
         enemy.setPosition(enemy.getX()-60, enemy.getY());
@@ -214,7 +236,7 @@ public class PlayScreen extends AbstractScreen {
         tapActor.setDeltatime(0);
         Vector3 position2World = camera.unproject(new Vector3(positionX, positionY,0));
         tapActor.setColor(Color.WHITE);
-        tapActor.setPosition(position2World.x- 10-((int)tapActor.getWidth()/2),( (int) position2World.y-tapActor.getHeight()/2));//TODO a calculer autrepart
+        tapActor.setPosition(position2World.x- 10-((int)tapActor.getWidth()/2),( (int) position2World.y-tapActor.getHeight()/2));
         tapActor.addAction(Actions.sequence(
                 Actions.show(),
                 Actions.fadeIn(0.1f),
@@ -223,7 +245,21 @@ public class PlayScreen extends AbstractScreen {
         ));
     }
 
-    /**
+    public void processWrongTargetAnimation(int positionX, int positionY) {
+        backgroundImageHurt.clearActions();
+        backgroundImageHurt.addAction(Actions.sequence(Actions.show(),Actions.fadeIn(0.2f),Actions.fadeOut(0.2f),Actions.hide()));
+
+        Vector3 position2World = camera.unproject(new Vector3(positionX, positionY,0));
+        causaltyLabel.clearActions();
+        causaltyLabel.setPosition(position2World.x- causaltyLabel.getWidth(),( (int) position2World.y+10));
+        causaltyLabel.addAction(Actions.sequence(
+                Actions.show(),
+                Actions.fadeIn(0.3f),
+                Actions.fadeOut(0.2f),
+                Actions.hide()
+        ));
+
+    }    /**
      * Declenchement d'un touch sur l'ecran
      */
     public void processHit(boolean critical) {
@@ -238,7 +274,11 @@ public class PlayScreen extends AbstractScreen {
             win_battle();
         } else {
             float healthPercent = 1-(float)healthCurrent / healthMax;
-            hud.decreaseHealthBar(healthPercent);
+            if (healthPercent >=0.98f) {
+                win_battle();
+            } else {
+                hud.decreaseHealthBar(healthPercent);
+            }
         }
     }
 
@@ -247,14 +287,19 @@ public class PlayScreen extends AbstractScreen {
      * @param critical
      */
     private void animateHit(boolean critical){
-        enemy.clearActions();
-        enemy.addAction(Actions.sequence(Actions.color(Color.LIGHT_GRAY,0.2f), Actions.color(Color.WHITE)));
+        // Test si animation toujours en cours
+        if (enemy.getActions().size==0) {
+            enemy.addAction(Actions.sequence(Actions.color(Color.VIOLET,0.4f), Actions.color(Color.WHITE)));
+        }
         String displayValue = gameManager.getLargeMath().getDisplayValue(gameManager.getGameInformation().getGenGoldActive(), gameManager.getGameInformation().getGenCurrencyActive());
         damageLabel = new Label(displayValue, new Label.LabelStyle(gameManager.getAssetManager().getFont(), Constants.NORMAL_LABEL_COLOR));
+        damageLabel.setFontScale(0.5f);
+        damageLabel.setTouchable(Touchable.disabled);
         damageLabel.setPosition(damageLabelPositionX[gLPPointer],damageLabelPositionY[gLPPointer]);
         if (critical) {
-            damageLabel.setText("CRITICAL "+String.valueOf("55"));
+            damageLabel.setText("CRITICAL ");
             damageLabel.setColor(Constants.CRITICAL_LABEL_COLOR);
+            playerMecha.setActiveAnimation("crit");
         }
         if (gLPPointer<damageLabelPositionX.length-1){
             gLPPointer++;
@@ -394,195 +439,21 @@ public class PlayScreen extends AbstractScreen {
         this.stage = stage;
     }
 
-    public TextButton getStartButton() {
-        return startButton;
-    }
-
-    public void setStartButton(TextButton startButton) {
-        this.startButton = startButton;
-    }
-
-    public TextButton getExitButton() {
-        return exitButton;
-    }
-
-    public void setExitButton(TextButton exitButton) {
-        this.exitButton = exitButton;
-    }
-
-    public Skin getSkin() {
-        return skin;
-    }
-
-    public void setSkin(Skin skin) {
-        this.skin = skin;
-    }
-
-    public OrthographicCamera getCamera() {
-        return camera;
-    }
-
-    public void setCamera(OrthographicCamera camera) {
-        this.camera = camera;
-    }
-
-    public Viewport getViewport() {
-        return viewport;
-    }
-
-    public void setViewport(Viewport viewport) {
-        this.viewport = viewport;
-    }
-
-    public float getCombatTimer() {
-        return combatTimer;
-    }
-
     public void setCombatTimer(float combatTimer) {
         this.combatTimer = combatTimer;
-    }
-
-    public SpriteBatch getSpriteBatch() {
-        return spriteBatch;
-    }
-
-    public void setSpriteBatch(SpriteBatch spriteBatch) {
-        this.spriteBatch = spriteBatch;
-    }
-
-    public AnimatedActor getEnemy() {
-        return enemy;
-    }
-
-    public void setEnemy(AnimatedActor enemy) {
-        this.enemy = enemy;
-    }
-
-    public AnimatedActor getPlayerMecha() {
-        return playerMecha;
-    }
-
-    public void setPlayerMecha(AnimatedActor playerMecha) {
-        this.playerMecha = playerMecha;
-    }
-
-    public int getHealthMax() {
-        return healthMax;
-    }
-
-    public void setHealthMax(int healthMax) {
-        this.healthMax = healthMax;
-    }
-
-    public int getHealthCurrent() {
-        return healthCurrent;
-    }
-
-    public void setHealthCurrent(int healthCurrent) {
-        this.healthCurrent = healthCurrent;
-    }
-
-    public int getTextAnimMinX() {
-        return textAnimMinX;
-    }
-
-    public void setTextAnimMinX(int textAnimMinX) {
-        this.textAnimMinX = textAnimMinX;
-    }
-
-    public Label getDamageLabel() {
-        return damageLabel;
-    }
-
-    public void setDamageLabel(Label damageLabel) {
-        this.damageLabel = damageLabel;
-    }
-
-    public int[] getDamageLabelPositionY() {
-        return damageLabelPositionY;
-    }
-
-    public void setDamageLabelPositionY(int[] damageLabelPositionY) {
-        this.damageLabelPositionY = damageLabelPositionY;
-    }
-
-    public int[] getDamageLabelPositionX() {
-        return damageLabelPositionX;
-    }
-
-    public void setDamageLabelPositionX(int[] damageLabelPositionX) {
-        this.damageLabelPositionX = damageLabelPositionX;
-    }
-
-    public int getgLPPointer() {
-        return gLPPointer;
-    }
-
-    public void setgLPPointer(int gLPPointer) {
-        this.gLPPointer = gLPPointer;
     }
 
     public CombatHud getHud() {
         return hud;
     }
 
-    public void setHud(CombatHud hud) {
-        this.hud = hud;
+    public void setHealthMax(int healthMax) {
+
+        this.healthMax = healthMax;
     }
 
-    public Group getLayer0GraphicObject() {
-        return layer0GraphicObject;
-    }
+    public AnimatedActor getEnemy() {
 
-    public void setLayer0GraphicObject(Group layer0GraphicObject) {
-        this.layer0GraphicObject = layer0GraphicObject;
-    }
-
-    public Group getLayer1GraphicObject() {
-        return layer1GraphicObject;
-    }
-
-    public void setLayer1GraphicObject(Group layer1GraphicObject) {
-        this.layer1GraphicObject = layer1GraphicObject;
-    }
-
-    public Group getLayer2GraphicObject() {
-        return layer2GraphicObject;
-    }
-
-    public void setLayer2GraphicObject(Group layer2GraphicObject) {
-        this.layer2GraphicObject = layer2GraphicObject;
-    }
-
-    public AnimatedActor getTapActor() {
-        return tapActor;
-    }
-
-    public void setTapActor(AnimatedActor tapActor) {
-        this.tapActor = tapActor;
-    }
-
-    public Random getRandom() {
-        return random;
-    }
-
-    public void setRandom(Random random) {
-        this.random = random;
-    }
-
-    public InputMultiplexer getInputMultiplexer() {
-        return inputMultiplexer;
-    }
-
-    public void setInputMultiplexer(InputMultiplexer inputMultiplexer) {
-        this.inputMultiplexer = inputMultiplexer;
-    }
-
-    public Image getBackgroundImage() {
-        return backgroundImage;
-    }
-
-    public void setBackgroundImage(Image backgroundImage) {
-        this.backgroundImage = backgroundImage;
+        return enemy;
     }
 }

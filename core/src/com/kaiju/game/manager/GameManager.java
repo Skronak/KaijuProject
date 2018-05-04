@@ -18,6 +18,8 @@ import com.kaiju.game.screen.TitleScreen;
 import com.kaiju.game.utils.GameState;
 import com.kaiju.game.utils.LargeMath;
 
+import java.util.Random;
+
 /**
  * Created by Skronak on 30/07/2017.
  *
@@ -48,6 +50,8 @@ public class GameManager {
 
     private BattleResultEntity battleResultEntity;
 
+    private Random random;
+
     // Etat du jeu
     public GameManager(MyGdxGame game) {
         this.game = game;
@@ -60,6 +64,7 @@ public class GameManager {
         titleScreen = new TitleScreen(this);
         lostScreen = new LostScreen(this);
         endGameScreen = new EndGameScreen(this);
+        random = new Random();
     }
 
     /**
@@ -145,14 +150,16 @@ public class GameManager {
         resultScreen.getStage().getRoot().addAction(sequenceAction);
     }
 
-    public void decreasePopulation() {
-        int value = gameInformation.getCurrentState() * 5200;
-        battleResultEntity.setPopulationLose(value);//sauvegarde la valeur pour l'afficher
+    public int decreasePopulation() {
+        int value = (gameInformation.getCurrentState()+1) * random.nextInt( 6000 - 150+1);
+        battleResultEntity.setPopulationLose(battleResultEntity.getPopulationLose()+value);//sauvegarde la valeur pour l'afficher
+
         if (value < gameInformation.getPopulation()){
             gameInformation.setPopulation(gameInformation.getPopulation()-value);
         } else {
             switchToLoseScreen();
         }
+        return value;
     }
     /**
      * Affiche le tableau de resultat

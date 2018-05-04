@@ -20,7 +20,7 @@ public class LargeMath {
 
     public LargeMath(GameInformation gameInformation) {
         this.gameInformation = gameInformation;
-        decimalFormat = (DecimalFormat) NumberFormat.getNumberInstance(Locale.ENGLISH);
+        decimalFormat = (DecimalFormat) NumberFormat.getNumberInstance(Locale.FRENCH);
         decimalFormat.applyPattern("##.#");
     }
 
@@ -58,71 +58,6 @@ public class LargeMath {
     }
 
     /**
-     * TODO a revoir : cas possibles
-     * @param firstValue
-     * @param firstCurrency
-     * @param secValue
-     * @param secCurrency
-     * @return
-     */
-    public ValueDTO increaseValue(Float  firstValue, int firstCurrency, Float secValue, int secCurrency) {
-        float newValue=firstValue;
-        int currencyDifference = firstCurrency - secCurrency ;
-        int maxCurrency = Math.max(firstCurrency, secCurrency);
-
-        if (currencyDifference >= Constants.UNLIMITED_CURRENCY_LIMIT && firstValue > secValue) {
-            Gdx.app.debug("LargeMath", "Non significative value " + newValue + " currencyDif " + currencyDifference);
-            return new ValueDTO(newValue, firstCurrency);
-        } else if (currencyDifference <= -Constants.UNLIMITED_CURRENCY_LIMIT && firstValue < secValue) {
-            Gdx.app.debug("LargeMath", "Non significative value " + newValue + " currencyDif " + currencyDifference);
-            return new ValueDTO(secValue, secCurrency);
-        }
-        if (currencyDifference == 0) {
-            return new ValueDTO(firstValue + secValue, firstCurrency);
-        }
-
-        float valueRes=0;
-        // cas firstValue > secValue
-        if (maxCurrency==firstCurrency) {
-            valueRes=(float) ((firstValue * Math.pow(1000, Double.valueOf(currencyDifference))) + (secValue));
-            valueRes = (float) (valueRes / Math.pow(1000, Double.valueOf(currencyDifference)));
-        } else {
-            valueRes=(float) ((firstValue) + (secValue * Math.pow(1000, Double.valueOf(currencyDifference))));
-            valueRes = (float) (valueRes / Math.pow(1000, Double.valueOf(currencyDifference)));
-        }
-
-        return new ValueDTO(valueRes, maxCurrency);
-    }
-
-    public ValueDTO decreaseValue(float firstValue, int firstCurrency, float secValue, int secCurrency) {
-        float newValue=firstValue;
-        int currencyDifference = firstCurrency - secCurrency ;
-        int maxCurrency = Math.max(firstCurrency, secCurrency);
-
-        if (currencyDifference >= Constants.UNLIMITED_CURRENCY_LIMIT) {
-            Gdx.app.debug("LargeMath", "Non significative value " + newValue + " currencyDif " + currencyDifference);
-            return new ValueDTO(newValue, firstCurrency);
-        } else if (currencyDifference <= -Constants.UNLIMITED_CURRENCY_LIMIT) {
-            Gdx.app.debug("LargeMath", "Non significative value " + newValue + " currencyDif " + currencyDifference);
-            return new ValueDTO(secValue, secCurrency);
-        }
-        if (currencyDifference == 0) {
-            return new ValueDTO(firstValue - secValue, firstCurrency);
-        }
-
-        float valueRes=0;
-        // cas firstValue > secValue
-        if (maxCurrency==firstCurrency) {
-            valueRes=(float) ((firstValue * Math.pow(1000, Double.valueOf(currencyDifference))) - (secValue));
-            valueRes = (float) (valueRes / Math.pow(1000, Double.valueOf(currencyDifference)));
-        } else {
-            valueRes=(float) ((firstValue) - (secValue * Math.pow(1000, Double.valueOf(currencyDifference))));
-            valueRes = (float) (valueRes / Math.pow(1000, Double.valueOf(currencyDifference)));
-        }
-
-        return new ValueDTO(valueRes, maxCurrency);
-    }
-    /**
      * Format les valeurs de gameInformation pour
      * la sauvegarde
      * Similaire a adjustCurrency
@@ -159,9 +94,8 @@ public class LargeMath {
         return (decimalFormat.format(valueDto.getValue()) + printLetter(valueDto.getCurrency()));
     }
 
-    public String getDisplayValue(ValueDTO valueDTO) {
-        ValueDTO valueDto = adjustCurrency(valueDTO.getValue(), valueDTO.getCurrency());
-        return (decimalFormat.format(valueDto.getValue()) + printLetter(valueDto.getCurrency()));
+    public String getDisplayValue(int value) {
+        return (decimalFormat.format(value));
     }
 
     //    formatGameInformation();

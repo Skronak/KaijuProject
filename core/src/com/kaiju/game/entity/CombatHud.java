@@ -46,16 +46,12 @@ public class CombatHud implements Disposable {
     private Texture skillButtonTextureDown;
     private Texture achievButtonTextureDown;
     private Texture mapButtonTextureDown;
-    private Button skillButton;
-    private Button upgradeButton;
-    private Button mapButton;
-    private Button achievButton;
     private GameManager gameManager;
     private BitmapFont font;
     private Image healthBarFull;
     private Image healthBarEmpty;
     private Table healthTable;
-    private AbstractMenu resultMenu;
+    private Label populationLabel;
 
     public CombatHud(GameManager gameManager) {
         OrthographicCamera camera = new OrthographicCamera();
@@ -67,54 +63,7 @@ public class CombatHud implements Disposable {
         this.healthBarFull= gameManager.getAssetManager().getHealthBarFull();
         this.healthBarEmpty= gameManager.getAssetManager().getHealthBarEmpty();
 
-        initMenu();
-        initButton();
         initHud();
-    }
-
-    /**
-     * Initialise les menu
-     */
-    private void initMenu() {
-        resultMenu = new FightResultMenu(gameManager);
-    }
-    /**
-     * Initialisation des bouton du hud
-     */
-    private void initButton() {
-        upgradeButtonTextureUp = new Texture(Gdx.files.internal("icon/hud_b2.png"));
-        skillButtonTextureUp = new Texture(Gdx.files.internal("icon/hud_b1.png"));
-        achievButtonTextureUp = new Texture(Gdx.files.internal("icon/hud_b3.png"));
-        mapButtonTextureUp = new Texture(Gdx.files.internal("icon/hud_b4.png"));
-        upgradeButtonTextureDown = new Texture(Gdx.files.internal("icon/hud_b2_r.png"));
-        skillButtonTextureDown = new Texture(Gdx.files.internal("icon/hud_b1_r.png"));
-        achievButtonTextureDown = new Texture(Gdx.files.internal("icon/hud_b3_r.png"));
-        mapButtonTextureDown = new Texture(Gdx.files.internal("icon/hud_b4_r.png"));
-        Drawable upgradeDrawableUp = new TextureRegionDrawable(new TextureRegion(upgradeButtonTextureUp));
-        Drawable skillDrawableUp = new TextureRegionDrawable(new TextureRegion(skillButtonTextureUp));
-        Drawable mapDrawableUp = new TextureRegionDrawable(new TextureRegion(achievButtonTextureUp));
-        Drawable achievDrawableUp = new TextureRegionDrawable(new TextureRegion(mapButtonTextureUp));
-        Drawable upgradeDrawableDown = new TextureRegionDrawable(new TextureRegion(upgradeButtonTextureDown));
-        Drawable skillDrawableDown = new TextureRegionDrawable(new TextureRegion(skillButtonTextureDown));
-        Drawable mapDrawableDown = new TextureRegionDrawable(new TextureRegion(achievButtonTextureDown));
-        Drawable achievDrawableDown = new TextureRegionDrawable(new TextureRegion(mapButtonTextureDown));
-        ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
-        style.up = skillDrawableUp;
-        style.down = skillDrawableDown;
-        upgradeButton = new ImageButton(style);
-        ImageButton.ImageButtonStyle style2 = new ImageButton.ImageButtonStyle();
-        style2.up = upgradeDrawableUp;
-        style2.down = upgradeDrawableDown;
-        skillButton = new ImageButton(style2);
-        ImageButton.ImageButtonStyle style3 = new ImageButton.ImageButtonStyle();
-        style3.up = mapDrawableUp;
-        style3.down = mapDrawableDown;
-        mapButton = new ImageButton(style3);
-        ImageButton.ImageButtonStyle style4 = new ImageButton.ImageButtonStyle();
-        style4.up = achievDrawableUp;
-        style4.down = achievDrawableDown;
-        achievButton = new ImageButton(style4);
-
     }
 
     /**
@@ -143,13 +92,22 @@ public class CombatHud implements Disposable {
         hudTable.add(healthTable).colspan(4);
         healthTable.pad(5);
         hudTable.row();
-//        hudTable.add(upgradeButton).expandY().bottom().height(Constants.PLAYSCREEN_MENU_BUTTON_HEIGHT).width(Constants.V_WIDTH/4);
-//        hudTable.add(skillButton).expandY().bottom().height(Constants.PLAYSCREEN_MENU_BUTTON_HEIGHT).width(Constants.V_WIDTH/4);
-//        hudTable.add(mapButton).expandY().bottom().height(Constants.PLAYSCREEN_MENU_BUTTON_HEIGHT).width(Constants.V_WIDTH/4);
-//        hudTable.add(achievButton).expandY().bottom().height(Constants.PLAYSCREEN_MENU_BUTTON_HEIGHT).width(Constants.V_WIDTH/4);
+
+        populationLabel = new Label("Population: "+String.valueOf(gameManager.getGameInformation().getPopulation()),new Label.LabelStyle(gameManager.getAssetManager().getFont(), Constants.NORMAL_LABEL_COLOR));
+        populationLabel.setFontScale(0.4f);
+        hudTable.add(populationLabel);
+
         stage.addActor(hudTable);
 
         // Ajout des menu a l'interface
+    }
+
+    /**
+     * Met a jour la population restante
+      * @param
+     */
+    public void decreasePopulation(){
+        populationLabel.setText("Population: "+gameManager.getGameInformation().getPopulation());
     }
 
     /**
@@ -157,7 +115,12 @@ public class CombatHud implements Disposable {
      * @param val
      */
     public void decreaseHealthBar(float val) {
+        if (val>=0.96f ){
+            val=0.96f; // Fix empeche la bar de s'etendre
+        }
         healthTable.getCells().get(1).width(Value.percentWidth(val, healthTable));
+        Gdx.app.log("width",String.valueOf(healthTable.getCells().get(1).getMinWidth()));
+
         healthTable.invalidate();
     }
 

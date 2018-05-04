@@ -30,10 +30,15 @@ public class CustomInputListener extends InputListener {
 
     @Override
     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+        int randCritical = random.nextInt(Constants.CRITICAL_CHANCE) + 1;
         this.gameManager.getBattleResultEntity().setTapNumber(gameManager.getBattleResultEntity().getTapNumber()+1);
         this.gameManager.getGameInformation().setTotalTapNumber(this.gameManager.getGameInformation().getTotalTapNumber()+1);
         this.playScreen.processPointerHitAnimation(Gdx.input.getX(), Gdx.input.getY());
-        this.playScreen.processHit(false);
+        if (randCritical == 1) {
+            this.playScreen.processHit(true);
+        }else{
+            this.playScreen.processHit(false);
+        }
         return false;
     }
 }

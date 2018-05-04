@@ -46,6 +46,7 @@ public class ResultScreen implements Screen {
 
     @Override
     public void show() {
+
         // fadeIn
         stage.getRoot().getColor().a = 0;
         stage.getRoot().addAction(fadeIn(0.5f));

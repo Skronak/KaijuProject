@@ -1,5 +1,6 @@
 package com.kaiju.game.utils;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.kaiju.game.entity.KaijuEntity;
@@ -27,6 +28,7 @@ public class FightResultMenu extends AbstractMenu {
     private Label scoreLabel;
     private Label populationLostLabel;
     private Label remainingPopulation;
+    private Label bonusLabel;
 
     public FightResultMenu(GameManager gameManager) {
         super(gameManager);
@@ -47,6 +49,7 @@ public class FightResultMenu extends AbstractMenu {
         noteLabel.setFontScale(2);
         populationLostLabel = new Label("", skin);
         remainingPopulation = new Label("", skin);
+        bonusLabel = new Label("LEVEL SUCCESS ! DAMAGE +1",skin);
 
         parentTable.setVisible(true);
         parentTable.add(new Image(gameManager.getAssetManager().getResultMenuBar())).colspan(2).top();
@@ -73,6 +76,8 @@ public class FightResultMenu extends AbstractMenu {
         parentTable.row();
         parentTable.add(scoreLabel).right();
         parentTable.row();
+        parentTable.add(bonusLabel).right();
+        parentTable.row();
         parentTable.add(new Image(gameManager.getAssetManager().getResultMenuBar())).colspan(2);
     }
 
@@ -91,11 +96,17 @@ public class FightResultMenu extends AbstractMenu {
         kaijuClassLabel.setText("Category: "+kaijuEntity.getCategory());
         kaijuNameLabel.setText("Name: "+kaijuEntity.getName());
         hitLabel.setText(String.valueOf("Hit number: "+gameManager.getBattleResultEntity().getTapNumber()));
+        if (gameManager.getBattleResultEntity().getPopulationLose()>0) {
+            populationLostLabel.setColor(Constants.BAD_LABEL_COLOR);
+            populationLostLabel.setFontScale(1.5f);
+        } else {
+            populationLostLabel.setColor(Constants.NORMAL_LABEL_COLOR);
+        }
         populationLostLabel.setText("Innocent killed: "+formatter.format(gameManager.getBattleResultEntity().getPopulationLose()));
         remainingPopulation.setText("Remaining population: "+formatter.format(gameManager.getGameInformation().getPopulation()));
         timerLabel.setText("Duration: "+ gameManager.getLargeMath().getDecimalFormat().format(kaijuEntity.getTime() - gameManager.getBattleResultEntity().getTimerLeft())+"s");
-        noteLabel.setText("RANK "+gameManager.getBattleResultEntity().getRank());
-        scoreLabel.setText("+ "+String.valueOf(gameManager.getBattleResultEntity().getGold()+ " Gold"));
+        noteLabel.setText("RANK: "+gameManager.getBattleResultEntity().getRank());
+        scoreLabel.setText("SCORE: "+String.valueOf(gameManager.getBattleResultEntity().getGold()));
         if (gameManager.getBattleResultEntity().getMultiplier()>0) {
             scoreLabel.setText(scoreLabel.getText().append(" (X"+gameManager.getBattleResultEntity().getMultiplier()+")"));
         }

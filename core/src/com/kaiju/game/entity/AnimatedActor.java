@@ -25,7 +25,7 @@ public class AnimatedActor extends Actor {
             this.setPosition(posX, posY);
             if (null != frames) {
                 idleAnimation = new Animation(animSpeed, frames);
-                idleAnimation.setPlayMode(Animation.PlayMode.NORMAL);
+                idleAnimation.setPlayMode(playMode);
                 deathAnimation = new Animation(animSpeed, framesDeath);
                 deathAnimation.setPlayMode(Animation.PlayMode.NORMAL);
             }

@@ -37,6 +37,8 @@ public class Constants {
 
     public static Color NORMAL_LABEL_COLOR = Color.WHITE;
 
+    public static Color BAD_LABEL_COLOR = Color.RED;
+
     public static float UPDATE_MENU_PAD_EXTERNAL_HEIGHT = 20;
 
     public static float UPDATE_MENU_PAD_EXTERNAL_WIDTH = 20;

@@ -11,12 +11,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.kaiju.game.entity.KaijuEntity;
 import com.kaiju.game.utils.BitmapFontGenerator;
 import com.kaiju.game.utils.Constants;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import static com.badlogic.gdx.Gdx.files;
 
@@ -36,8 +39,8 @@ public class AssetManager {
     private Image healthBarEmpty;
     private Image loseBackground;
     private Texture resultMenuBar;
+    private List<Texture> backgroundTextureList;
     private Image endGameImage;
-    private Texture backgroundCity;
     private Texture backgroundCityHurt;
     private Color resultTextColor;
     private ArrayList<KaijuEntity> kaijuEntityList;
@@ -45,8 +48,11 @@ public class AssetManager {
     private Sound kaijuRoar1Sound;
     private Music easterMusic;
     private Image mainBackground;
+    private Random random;
     private Music loseMusic;
     private int loadValue;
+    Array<TextureRegion> mechaFramesIdle = new Array<TextureRegion>();
+    Array<TextureRegion> mechaFramesCrit = new Array<TextureRegion>();
 
     public AssetManager() {
         this.json = new Json();
@@ -70,11 +76,30 @@ public class AssetManager {
         generator.dispose();
         mainBackground = new Image(new Texture(files.internal("image/mg.png")));
         resultMenuBar = new Texture(files.internal("ui/separator.png"));
-        backgroundCity = new Texture(files.internal("image/city.png"));
+        backgroundTextureList = new ArrayList<Texture>();
+        backgroundTextureList.add(new Texture(files.internal("image/city.png")));
+        backgroundTextureList.add(new Texture(files.internal("image/city1.png")));
+        backgroundTextureList.add(new Texture(files.internal("image/city2.png")));
+        backgroundTextureList.add(new Texture(files.internal("image/city3.png")));
         backgroundCityHurt = new Texture(files.internal("image/cityHurt.png"));
         menuBackgroundTexture = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("ui/backgroundMenu.png"))));
         loseBackground = new Image(new Texture(Gdx.files.internal("image/lost.png")));
         endGameImage = new Image(new Texture(Gdx.files.internal("image/endGame.png")));
+
+        mechaFramesIdle = new Array<TextureRegion>();
+        mechaFramesIdle.add(new TextureRegion(new Texture(files.internal("sprites/mecha1.png"))));
+
+        mechaFramesCrit = new Array<TextureRegion>();
+        mechaFramesCrit.add(new TextureRegion(new Texture(files.internal("sprites/mecha1.png"))));
+        mechaFramesCrit.add(new TextureRegion(new Texture(files.internal("sprites/mecha2.png"))));
+        mechaFramesCrit.add(new TextureRegion(new Texture(files.internal("sprites/mecha3.png"))));
+        mechaFramesCrit.add(new TextureRegion(new Texture(files.internal("sprites/mecha4.png"))));
+        mechaFramesCrit.add(new TextureRegion(new Texture(files.internal("sprites/mecha5.png"))));
+        mechaFramesCrit.add(new TextureRegion(new Texture(files.internal("sprites/mecha6.png"))));
+        mechaFramesCrit.add(new TextureRegion(new Texture(files.internal("sprites/mecha7.png"))));
+        mechaFramesCrit.add(new TextureRegion(new Texture(files.internal("sprites/mecha8.png"))));
+        mechaFramesCrit.add(new TextureRegion(new Texture(files.internal("sprites/mecha9.png"))));
+        mechaFramesCrit.add(new TextureRegion(new Texture(files.internal("sprites/mecha10.png"))));
 
         Texture health1 = new Texture(Gdx.files.internal("icon/healthBar1.jpg"));
         Texture health2 = new Texture(Gdx.files.internal("icon/healthBar3.jpg"));
@@ -94,6 +119,7 @@ public class AssetManager {
         easterMusic.setLooping(true);
         kaijuRoar1Sound = Gdx.audio.newSound(Gdx.files.internal("audio/godRoar1.mp3"));
 
+        random = new Random();
         loadValue+=1;
 
     }
@@ -118,6 +144,9 @@ public class AssetManager {
 //                  GETTER & SETTER
 // ****************************************************
 
+    public Texture getRandBackgroundTexture(){
+        return backgroundTextureList.get(random.nextInt(backgroundTextureList.size()));
+    }
 
     public ArrayList<KaijuEntity> getKaijuEntityList() {
         return kaijuEntityList;
@@ -145,10 +174,6 @@ public class AssetManager {
 
     public Music getLoseMusic() {
         return loseMusic;
-    }
-
-    public Texture getBackgroundCity() {
-        return backgroundCity;
     }
 
     public Skin getSkin() {
@@ -189,5 +214,13 @@ public class AssetManager {
 
     public Texture getBackgroundCityHurt() {
         return backgroundCityHurt;
+    }
+
+    public Array<TextureRegion> getMechaFramesIdle() {
+        return mechaFramesIdle;
+    }
+
+    public Array<TextureRegion> getMechaFramesCrit() {
+        return mechaFramesCrit;
     }
 }
