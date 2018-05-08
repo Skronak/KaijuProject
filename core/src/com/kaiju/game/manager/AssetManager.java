@@ -50,6 +50,7 @@ public class AssetManager {
     private Image mainBackground;
     private Random random;
     private Music loseMusic;
+    private Image upgradeBGImage;
     private int loadValue;
     Array<TextureRegion> mechaFramesIdle = new Array<TextureRegion>();
     Array<TextureRegion> mechaFramesCrit = new Array<TextureRegion>();
@@ -58,6 +59,7 @@ public class AssetManager {
         this.json = new Json();
 
         loadValue=0;
+
         loadUpgradeFile();
         loadIcons();
         loadImage();
@@ -75,6 +77,7 @@ public class AssetManager {
         font = generator.getFont();
         generator.dispose();
         mainBackground = new Image(new Texture(files.internal("image/mg.png")));
+        upgradeBGImage = new Image(new Texture(files.internal("image/upgradeBG.png")));
         resultMenuBar = new Texture(files.internal("ui/separator.png"));
         backgroundTextureList = new ArrayList<Texture>();
         backgroundTextureList.add(new Texture(files.internal("image/city.png")));
@@ -222,5 +225,9 @@ public class AssetManager {
 
     public Array<TextureRegion> getMechaFramesCrit() {
         return mechaFramesCrit;
+    }
+
+    public Image getUpgradeBGImage() {
+        return upgradeBGImage;
     }
 }

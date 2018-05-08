@@ -5,16 +5,14 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.kaiju.game.entity.KaijuEntity;
 import com.kaiju.game.input.CustomResultInputProcessor;
-import com.kaiju.game.utils.Constants;
-import com.kaiju.game.utils.FightResultMenu;
-
 import com.kaiju.game.manager.GameManager;
+import com.kaiju.game.utils.Constants;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn;
 
@@ -22,26 +20,38 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn;
  * Created by Skronak on 15/07/2017.
  */
 
-public class ResultScreen implements Screen {
+public class UpgradeScreen implements Screen {
 
     private GameManager gameManager;
     private Camera camera;
     private FitViewport viewport;
     private Stage stage;
-    private KaijuEntity currentKaijuEntity;
-    private FightResultMenu fightResultMenu;
     private CustomResultInputProcessor customResultInputProcessor;
+    private Group layer0GraphicObject; // Background
+    private Group layer1GraphicObject; // Objects
+    private Group layer2GraphicObject; // Foreground
+    private Table table;
 
-    public ResultScreen(GameManager gameManager){
+    public UpgradeScreen(GameManager gameManager){
         this.gameManager = gameManager;
 
         camera = new OrthographicCamera(Constants.V_WIDTH, Constants.V_HEIGHT);
         viewport = new FitViewport(Constants.V_WIDTH, Constants.V_HEIGHT, camera);
-        fightResultMenu = new FightResultMenu(gameManager);
         customResultInputProcessor=new CustomResultInputProcessor(gameManager);
 
         stage = new Stage(viewport);
-        stage.addActor(fightResultMenu.getParentTable());
+        layer0GraphicObject = new Group();
+        layer1GraphicObject = new Group();
+        layer2GraphicObject = new Group();
+
+        Image upgradeBGImg = gameManager.getAssetManager().getUpgradeBGImage();
+        upgradeBGImg.setSize(Constants.V_WIDTH, Constants.V_HEIGHT);
+        layer0GraphicObject.addActor(upgradeBGImg);
+        table = new Table();
+
+        stage.addActor(layer0GraphicObject);
+        stage.addActor(layer1GraphicObject);
+        stage.addActor(layer2GraphicObject);
     }
 
     @Override
@@ -50,9 +60,8 @@ public class ResultScreen implements Screen {
         // fadeIn
         stage.getRoot().getColor().a = 0;
         stage.getRoot().addAction(fadeIn(0.5f));
-        fightResultMenu.setKaijuEntity(currentKaijuEntity);
-        gameManager.initResultEntity();
-        fightResultMenu.initTable();
+
+        Gdx.app.debug("UpgradeScreen","Show");
 
         Gdx.input.setInputProcessor(customResultInputProcessor);
     }
@@ -87,19 +96,4 @@ public class ResultScreen implements Screen {
     public void dispose() {
     }
 
-    public KaijuEntity getCurrentKaijuEntity() {
-        return currentKaijuEntity;
-    }
-
-    public void setCurrentKaijuEntity(KaijuEntity currentKaijuEntity) {
-        this.currentKaijuEntity = currentKaijuEntity;
-    }
-
-    public Stage getStage() {
-        return stage;
-    }
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
 }

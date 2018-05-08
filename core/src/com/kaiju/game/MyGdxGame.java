@@ -9,6 +9,7 @@ import com.kaiju.game.screen.SplashScreen;
 import com.kaiju.game.screen.TitleScreen;
 
 import com.kaiju.game.manager.GameManager;
+import com.kaiju.game.screen.UpgradeScreen;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeOut;
 
@@ -35,6 +36,7 @@ public class MyGdxGame extends Game {
         GameManager gameManager = new GameManager(this);
         playScreen = gameManager.getPlayScreen();
 
+//		setScreen(new UpgradeScreen(gameManager));
 		setScreen(gameManager.getTitleScreen());
     }
 

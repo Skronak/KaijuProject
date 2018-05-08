@@ -15,12 +15,6 @@ public class Constants {
     // Taille virtuelle horizontale de l'application
     public static final int V_HEIGHT = 570; //570
 
-    // Taux generation gold offline
-    public static float RATE_GENGOLD_OFFLINE = 0.5f;
-
-    // Delay pour generation coffre rattrapage gold offline
-    public static int DELAY_GENGOLD_LAST_CO = 300;
-
     // Delay pour generation coffre rattrapage gold offline
     public static int DELAY_AUTOSAVE = 300;
 
@@ -29,6 +23,9 @@ public class Constants {
 
     // Style du font utilise
     public static String FONT_STYLE = "stocky";
+
+    // Multiplicateur critique
+    public static final int CRITICAL_MULIPLIER = 5;
 
     // chance d'avoir un crit (1/10)
     public static int CRITICAL_CHANCE = 20;
@@ -51,23 +48,7 @@ public class Constants {
 
     public static float[] RESULT_LABEL_COLOR = {255,102,0};
 
-    // Nombre d'heure minimum pour toucher la recompense de repos
-    public static int DELAY_HOURS_REWARD = 1;
-
-    // Delai avant de generer de l'or automatiquement
-    public static int DELAY_GENGOLD_PASSIV = 2;
-
-    // Difference de currency pour passer le cout en free
-    public static int UNLIMITED_CURRENCY_LIMIT = 9;
-
     // Index de la lettre maximale atteignable
     public static int CURRENCY_MAX_LETTER_INDEX= 14;
-
-    // nombre de digit qu'on conserve des gold du joueur
-    public static int GOLD_PLAYER_SIZE_STORAGE = 9;
-
-    public static int STATION_ANIMATION_MAX_ALTITUDE = 408; //308
-
-    public static int STATION_ANIMATION_MIN_ALTITUDE = 402;//302
 
 }

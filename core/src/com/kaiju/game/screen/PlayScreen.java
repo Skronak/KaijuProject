@@ -263,12 +263,19 @@ public class PlayScreen extends AbstractScreen {
      * Declenchement d'un touch sur l'ecran
      */
     public void processHit(boolean critical) {
-        updateEnemyHealth();
+        updateEnemyHealth(critical);
         animateHit(critical);
    }
 
-    private void updateEnemyHealth(){
-        healthCurrent-=gameManager.getGameInformation().getGenGoldActive();
+    private void updateEnemyHealth(boolean critical){
+
+        // Mise a jour de la vie de l'enemi
+        if (critical) {
+            healthCurrent-=(gameManager.getGameInformation().getGenGoldActive())*Constants.CRITICAL_MULIPLIER;
+        } else {
+            healthCurrent-=gameManager.getGameInformation().getGenGoldActive();
+        }
+
         if (healthCurrent <= 0) {
             gameManager.setCurrentState(GameState.WAIT);
             win_battle();
