@@ -6,6 +6,8 @@ import com.kaiju.game.utils.GameState;
 import com.kaiju.game.manager.GameManager;
 
 /**
+ * Created by Skronak on 24/03/2018.
+ 
 * Action personnalisee pour changer le
  * gamestate dans une action
 */
