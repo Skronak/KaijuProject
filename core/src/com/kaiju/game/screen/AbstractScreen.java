@@ -4,7 +4,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 /**
- * Created by gcouturier on 28/03/2018.
+ * Created by Skronak on 28/03/2018.
  */
 
 public abstract class AbstractScreen implements Screen {
