@@ -3,7 +3,7 @@ package com.kaiju.game.entity;
 import com.kaiju.game.manager.GameManager;
 
 /**
- * Created by gcouturier on 28/03/2018.
+ * Created by Skronak on 28/03/2018.
  */
 
 public class BattleResultEntity {
