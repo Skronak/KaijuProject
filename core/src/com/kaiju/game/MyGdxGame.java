@@ -14,7 +14,7 @@ import com.kaiju.game.screen.UpgradeScreen;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeOut;
 
 /**
- * TODO chargement avec asssetmanager
+ * Created by Skronak on 24/03/2018.
  */
 public class MyGdxGame extends Game {
 
@@ -35,9 +35,7 @@ public class MyGdxGame extends Game {
 		}
         GameManager gameManager = new GameManager(this);
         playScreen = gameManager.getPlayScreen();
-
-//		setScreen(new UpgradeScreen(gameManager));
-		setScreen(gameManager.getTitleScreen());
+	setScreen(gameManager.getTitleScreen());
     }
 
 	@Override
